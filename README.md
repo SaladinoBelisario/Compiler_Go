@@ -1,6 +1,8 @@
-# Interpreter written in Go for the Monkey language
+# Compiler written in Go for the Monkey language
 
-**Tree-walking interpreter written in Go.**
+**Compiler written in Go.**
+
+**Stack Machine (Virtual Machine).**
 
 **Monkey language has the following:**
 * C-like syntax 
