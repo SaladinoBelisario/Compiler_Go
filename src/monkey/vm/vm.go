@@ -117,25 +117,6 @@ func (vm *VM) Run() error {
 			if err != nil {
 				return err
 			}
-		case code.OpHash:
-			numElements := int(code.ReadUint16(vm.instructions[ip+1:]))
-			ip += 2
-			hash, err := vm.buildHash(vm.sp-numElements, vm.sp)
-			if err != nil {
-				return err
-			}
-			vm.sp = vm.sp - numElements
-			err = vm.push(hash)
-			if err != nil {
-				return err
-			}
-		case code.OpIndex:
-			index := vm.pop()
-			left := vm.pop()
-			err := vm.executeIndexExpression(left, index)
-			if err != nil {
-				return err
-			}
 		}
 	}
 	return nil
@@ -279,5 +260,13 @@ func NewWithGlobalsStore(bytecode *compiler.Bytecode, s []object.Object) *VM {
 	vm := New(bytecode)
 	vm.globals = s
 	return vm
+}
+
+func (vm *VM) buildArray(startIndex, endIndex int) object.Object {
+	elements := make([]object.Object, endIndex-startIndex)
+	for i := startIndex; i < endIndex; i++ {
+		elements[i-startIndex] = vm.stack[i]
+	}
+	return &object.Array{Elements: elements}
 }
 
