@@ -88,6 +88,7 @@ type Hashable interface {
 
 type CompiledFunction struct {
 	Instructions code.Instructions
+	NumLocals	int
 }
 
 func (f *Function) Type() ObjectType { return FUNCTION_OBJ }
