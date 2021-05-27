@@ -190,25 +190,22 @@ as this is going to impact our compiler.
   > out in memory next to each other:
   > -- <cite>Thorsten Ball</cite>
 ![Bytecode](Bytecode.PNG)
-  
-## **Compilation Example**
-```
-$ go run main.go 
-Hello mrnugget! This is the Monkey programming language! 
-Feel free to type in commands 
->> let people = [{"name": "Alice", "age": 24}, {"name": "Anna", "age": 28}]; 
->> people[0]["name"]; 
-Alice
->> people[1]["age"]; 
-28
->> people[1]["age"] + people[0]["age"];
-52 
->> let getName = fn(person) { person["name"]; };
->> getName(people[0]);
-Alice 
->> getName(people[1]); 
-Anna
-```  
+
+## **Our Compiler is faster than our Interpreter!**
+We build it into its own executable: 
+> $ go build -o fibonacci ./benchmark
+
+And now, welcome, first on the stage, the evaluator:
+> $ ./fibonacci -engine=eval 
+> 
+> engine=eval, result=9227465, duration=27.204277379s 
+
+27 seconds. Time for our final pat on the back:
+> $ ./fibonacci -engine=vm 
+> 
+> engine=vm, result=9227465, duration=8.876222455s
+
+8 seconds. **3.3 times faster.**
 
 ## References:
 
