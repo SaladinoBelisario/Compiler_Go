@@ -23,6 +23,7 @@ const (
 	ARRAY_OBJ = "ARRAY"
 	HASH_OBJ = "HASH"
 	COMPILED_FUNCTION_OBJ = "COMPILED_FUNCTION_OBJ"
+	CLOSURE_OBJ = "CLOSURE"
 )
 
 type Object interface {
@@ -92,6 +93,11 @@ type CompiledFunction struct {
 	NumParameters int
 }
 
+type Closure struct {
+	Fn *CompiledFunction
+	Free []Object
+}
+
 func (f *Function) Type() ObjectType { return FUNCTION_OBJ }
 func (b *Boolean) Type() ObjectType { return BOOLEAN_OBJ }
 func (b *Boolean) Inspect() string  { return fmt.Sprintf("%t", b.Value) }
@@ -109,6 +115,8 @@ func (b *Builtin) Type() ObjectType { return BUILTIN_OBJ }
 func (b *Builtin) Inspect() string { return "builtin function" }
 func (cf *CompiledFunction) Type() ObjectType { return COMPILED_FUNCTION_OBJ }
 func (cf *CompiledFunction) Inspect() string { return fmt.Sprintf("CompiledFunction[%p]", cf)}
+func (c *Closure) Type() ObjectType { return CLOSURE_OBJ }
+func (c *Closure) Inspect() string { return fmt.Sprintf("Closure[%p]", c)}
 func (f *Function) Inspect() string {
 	var out bytes.Buffer
 
@@ -126,6 +134,7 @@ func (f *Function) Inspect() string {
 
 	return out.String()
 }
+
 func (ao *Array) Type() ObjectType { return ARRAY_OBJ }
 func (ao *Array) Inspect() string {
 	var out bytes.Buffer
@@ -148,9 +157,11 @@ func (b *Boolean) HashKey() HashKey {
 	}
 	return HashKey{Type: b.Type(), Value: value}
 }
+
 func (i *Integer) HashKey() HashKey {
 	return HashKey{Type: i.Type(), Value: uint64(i.Value)}
 }
+
 func (s *String) HashKey() HashKey {
 	h := fnv.New64a()
 	h.Write([]byte(s.Value))
@@ -158,7 +169,6 @@ func (s *String) HashKey() HashKey {
 }
 
 func (h *Hash) Type() ObjectType { return HASH_OBJ }
-
 func (h *Hash) Inspect() string {
 	var out bytes.Buffer
 	pairs := []string{}
