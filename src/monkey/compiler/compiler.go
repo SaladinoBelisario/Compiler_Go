@@ -259,7 +259,7 @@ func (c *Compiler) Compile(node ast.Node) error {
 			NumLocals:	numLocals,
 			NumParameters: len(node.Parameters),
 		}
-		fnIndex := c.addConstant(compiledFn) 
+		fnIndex := c.addConstant(compiledFn)
 		c.emit(code.OpClosure, fnIndex, len(freeSymbols))
 	case *ast.ReturnStatement:
 		err := c.Compile(node.ReturnValue)
